@@ -30,23 +30,39 @@ const CartProvider = ({ children }) => {
     setCart(newCart);
   };
 
-  const handleIncreaseQuantity = (item) => {
-    const updatedCart = cart.map((cartItem) =>
-      cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
-    );
+  
+const handleIncreaseQuantity = (item) => {
+  const updatedCart = cart.map((cartItem) => {
+    if (cartItem.id === item.id) {
+      return {
+        ...cartItem,
+        quantity: cartItem.quantity + 1,
+        price: cartItem.price * (cartItem.quantity + 1), // Update the price when increasing quantity
+      };
+    }
+    return cartItem;
+  });
     setCart(updatedCart);
     setTotal(total + parseFloat(item.price));
   };
 
   const handleDecreaseQuantity = (item) => {
-    if (item.quantity > 1) {
-      const updatedCart = cart.map((cartItem) =>
-        cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
-      );
+    const updatedCart = cart.map((cartItem) => {
+      if (cartItem.id === item.id) {
+        const newQuantity = Math.max(cartItem.quantity - 1, 0); // Ensure quantity doesn't go below zero
+        return {
+          ...cartItem,
+          quantity: newQuantity,
+          price: cartItem.price * newQuantity, // Update the price when decreasing quantity
+        };
+      }
+      return cartItem;
+    });
+  
       setCart(updatedCart);
       setTotal(total - parseFloat(item.price));
     }
-  };
+
 
   return (
     <CartContext.Provider
