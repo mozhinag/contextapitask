@@ -37,7 +37,7 @@ const handleIncreaseQuantity = (item) => {
       return {
         ...cartItem,
         quantity: cartItem.quantity + 1,
-        price: cartItem.price * (cartItem.quantity + 1), // Update the price when increasing quantity
+        price: cartItem.price * (cartItem.quantity + 1), 
       };
     }
     return cartItem;
@@ -49,11 +49,11 @@ const handleIncreaseQuantity = (item) => {
   const handleDecreaseQuantity = (item) => {
     const updatedCart = cart.map((cartItem) => {
       if (cartItem.id === item.id) {
-        const newQuantity = Math.max(cartItem.quantity - 1, 0); // Ensure quantity doesn't go below zero
+        const newQuantity = Math.max(cartItem.quantity - 1, 0); 
         return {
           ...cartItem,
           quantity: newQuantity,
-          price: cartItem.price * newQuantity, // Update the price when decreasing quantity
+          price: cartItem.price * newQuantity, 
         };
       }
       return cartItem;
