@@ -1,4 +1,4 @@
-// CartProvider.js
+
 
 import React, { createContext, useState } from "react";
 import { productDetails } from "./productDetails";
