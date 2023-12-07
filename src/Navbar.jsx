@@ -6,7 +6,7 @@ import { CartContext } from './Context/CartContext';
 
 function Navbar() {
  
-  const { cart } = useContext(CartContext);
+  const { cartItems } = useContext(CartContext);
 
 
   return <>
@@ -29,9 +29,7 @@ function Navbar() {
         </ul>
        
      
-        <Link to="/cartitem" className="nav-link" >
-  Cart({cart.length})
-</Link>
+        <Link to="/cartitem" className="nav-link" > Cart({cartItems.length})</Link>
 
 
       

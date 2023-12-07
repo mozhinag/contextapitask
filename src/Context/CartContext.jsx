@@ -1,94 +1,74 @@
-// CartProvider.js
+import { createContext, useState, useEffect } from 'react'
+import {productDetails} from"./productDetails";
+export const CartContext = createContext()
 
-import React, { createContext, useState } from "react";
-import { productDetails } from "./productDetails";
+export const CartProvider = ({ children }) => {
+  const [product,setProducts] = useState(productDetails);
+  const [cartItems, setCartItems] = useState(localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : [])
 
-const CartContext = createContext();
+  const handleAddToCart = (prductDetails) => {
+    const isItemInCart = cartItems.find((cartItem) => cartItem.id === prductDetails.id);
 
-const CartProvider = ({ children }) => {
-  const [product, setProduct] = useState(productDetails);
-  const [cart, setCart] = useState([]);
-  const [total, setTotal] = useState(0);
-
-  const calculateTotal = (cartItems) => {
-    return cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  };
-
-  const handleAddToCart = (productDetails) => {
-    const existingItem = cart.find((item) => item.id === productDetails.id);
-
-    if (existingItem) {
-      const updatedCart = cart.map((item) =>
-        item.id === existingItem.id ? { ...item, quantity: item.quantity + 1 } : item
-
+    if (isItemInCart) {
+      setCartItems(
+        cartItems.map((cartItem) =>
+          cartItem.id === prductDetails.id
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        )
       );
-      setCart(updatedCart);
     } else {
-      setCart([...cart, { ...productDetails, quantity: 1 }]);
+      setCartItems([...cartItems, { ...prductDetails, quantity: 1 }]);
     }
-    setTotal(calculateTotal(cart));
- 
-  
   };
 
   const handleRemoveItem = (item) => {
-    alert(`Item ${item.name} is removed`);
-    const newCart = cart.filter((cartItem) => cartItem.id !== item.id);
-    
-    setCart(newCart);
-    setTotal(calculateTotal(newCart));
+    const isItemInCart = cartItems.find((cartItem) => cartItem.id === item.id);
+
+    if (isItemInCart.quantity === 1) {
+      setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
+    } else {
+      setCartItems(
+        cartItems.map((cartItem) =>
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: cartItem.quantity - 1 }
+            : cartItem
+        )
+      );
+    }
   };
 
-  const handleIncreaseQuantity = (item) => {
-    const updatedCart = cart.map((cartItem) =>
-      cartItem.id === item.id
-        ? {
-            ...cartItem,
-            quantity: cartItem.quantity + 1,
-       
-            price: cartItem.price * (cartItem.quantity + 1),
-          }
-        : cartItem
-    );
-
-    setCart(updatedCart);
-    setTotal(calculateTotal(updatedCart));
+  const clearCart = () => {
+    setCartItems([]);
   };
 
-  const handleDecreaseQuantity = (item) => {
-    const updatedCart = cart.map((cartItem) => {
-      if (cartItem.id === item.id) {
-        const newQuantity = Math.max(cartItem.quantity - 1, 1);
-        return {
-          ...cartItem,
-          quantity: newQuantity,
-          
-          price: cartItem.price * newQuantity,
-        };
-      }
-      return cartItem;
-    });
-  
-    setCart(updatedCart);
-    setTotal(calculateTotal(updatedCart));
+  const getCartTotal = () => {
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
-  
+
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
+
+  useEffect(() => {
+    const cartItems = localStorage.getItem("cartItems");
+    if (cartItems) {
+      setCartItems(JSON.parse(cartItems));
+    }
+  }, []);
 
   return (
     <CartContext.Provider
       value={{
         product,
-        cart,
-        total,
+        cartItems,
         handleAddToCart,
         handleRemoveItem,
-        handleIncreaseQuantity,
-        handleDecreaseQuantity,
+        clearCart,
+        getCartTotal,
       }}
     >
       {children}
     </CartContext.Provider>
   );
 };
-
-export { CartProvider, CartContext };

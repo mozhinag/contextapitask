@@ -2,26 +2,26 @@ import React, { useContext } from 'react';
 import { CartContext } from './Context/CartContext';
 
 const CartItem = () => {
-  const { cart, handleRemoveItem, total, handleIncreaseQuantity, handleDecreaseQuantity } = useContext(CartContext);
+  const { cartItems, handleRemoveItem, getCartTotal, handleAddToCart } = useContext(CartContext);
 
   return (
     <div>
       <div className="productContainer-fluid">
         <h2>Shopping Cart</h2>
-        {cart.length > 0 ? (
+        {cartItems.length > 0 ? (
           <ul className="list-group">
-            {cart.map((item, index) => ( 
+            {cartItems.map((item, index) => (
               <li key={index} className="list-group-item d-flex justify-content-between align-items-start">
-                <div className="ms-2 me-auto">
+                           <div className="ms-2 me-auto">
                   <div className="fw-bold">{item.name}</div>
-                  <div>${item.price}</div>
+                  <div>${item.price*item.quantity}</div>
                   <div>Quantity: {item.quantity}</div>
                 </div>
                 <div className="d-grid gap-2 d-md-flex justify-content-md-end">
                   <button
                     className="btn btn-sm btn-primary me-md-2"
                     type="button"
-                    onClick={() => handleIncreaseQuantity(item)}
+                    onClick={() => handleAddToCart(item)}
                   >
                     +
                   </button>
@@ -29,7 +29,7 @@ const CartItem = () => {
                   <button
                     className="btn btn-sm btn-primary me-md-2"
                     type="button"
-                    onClick={() => handleDecreaseQuantity(item)}
+                    onClick={() => handleRemoveItem(item)}
                   >
                     -
                   </button>
@@ -37,15 +37,15 @@ const CartItem = () => {
                 <button className="btn btn-sm btn-danger" onClick={() => handleRemoveItem(item)}>
                   X
                 </button>
-              </li>
+                </li>
             ))}
           </ul>
         ) : (
           <p>No items in the cart</p>
         )}
-      
+
         <span>
-          <h2>Total: ${total.toFixed(2)}</h2>
+          <h2>Total: ${getCartTotal()}</h2>
         </span>
       </div>
     </div>

@@ -3,8 +3,8 @@ import { BsStarFill } from 'react-icons/bs';
 import { CartContext } from './Context/CartContext';
 
 function Products({ Details }) {
-  const { handleAddToCart, handleRemoveItem, cart } = useContext(CartContext);
-  const isInCart = () => Details && cart.some(item => item.id === Details.id)
+  const { handleAddToCart, handleRemoveItem,cartItems } = useContext(CartContext);
+  const isInCart = () => Details && cartItems.some(item => item.id === Details.id)
   const handleClick = (Details) => isInCart() ? handleRemoveItem(Details) : handleAddToCart(Details)
 
   const badgeStyle = {

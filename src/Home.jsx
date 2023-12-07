@@ -1,5 +1,6 @@
 
 import { useContext } from 'react';
+import React from 'react';
 
 import Products from './Products';
 import { CartContext } from './Context/CartContext';
@@ -31,4 +32,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Home;
