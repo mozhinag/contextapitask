@@ -16,7 +16,7 @@ function App() {
     <BrowserRouter>
       <CartProvider>
 
-        <div className='container'>
+        <div className='container-fluid'>
           <div className='row'>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
               <Navbar />

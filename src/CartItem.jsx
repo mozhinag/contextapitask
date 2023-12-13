@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { CartContext } from './Context/CartContext';
 
 const CartItem = () => {
-  const { cartItems, handleRemoveItem, getCartTotal, handleAddToCart } = useContext(CartContext);
+  const { cartItems, handleRemoveItem, getCartTotal, handleAddToCart,handleDecreaseQuantity } = useContext(CartContext);
 
   return (
     <div>
@@ -29,7 +29,7 @@ const CartItem = () => {
                   <button
                     className="btn btn-sm btn-primary me-md-2"
                     type="button"
-                    onClick={() => handleRemoveItem(item)}
+                    onClick={() => handleDecreaseQuantity(item)}
                   >
                     -
                   </button>

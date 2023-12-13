@@ -18,7 +18,7 @@ function Products({ Details }) {
 
 
         <div className="badge bg-dark text-white position-absolute" style={badgeStyle}>{Details.salebadge}</div>
-        <img className="card-img-top" src={Details.img} alt="..." />
+        <img className="card-img-top"  style={{height:'200px'}} src={Details.img} alt="..." />
 
         <div className="card-body p-4">
           <div className="text-center">

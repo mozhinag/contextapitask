@@ -6,41 +6,39 @@ export const CartProvider = ({ children }) => {
   const [product,setProducts] = useState(productDetails);
   const [cartItems, setCartItems] = useState(localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : [])
 
-  const handleAddToCart = (prductDetails) => {
-    const isItemInCart = cartItems.find((cartItem) => cartItem.id === prductDetails.id);
-
+  const handleAddToCart = (productDetails) => {
+    const isItemInCart = cartItems.find((cartItem) => cartItem.id === productDetails.id);
+  
     if (isItemInCart) {
       setCartItems(
         cartItems.map((cartItem) =>
-          cartItem.id === prductDetails.id
+          cartItem.id === productDetails.id
             ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
         )
       );
     } else {
-      setCartItems([...cartItems, { ...prductDetails, quantity: 1 }]);
+      setCartItems([...cartItems, { ...productDetails, quantity: 1 }]);
     }
   };
 
   const handleRemoveItem = (item) => {
-    const isItemInCart = cartItems.find((cartItem) => cartItem.id === item.id);
-
-    if (isItemInCart.quantity === 1) {
-      setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
-    } else {
-      setCartItems(
-        cartItems.map((cartItem) =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity - 1 }
-            : cartItem
-        )
-      );
-    }
+    const updatedCartItems = cartItems.filter((cartItem) => cartItem.id !== item.id);
+  
+    setCartItems(updatedCartItems);
   };
-
-  const clearCart = () => {
-    setCartItems([]);
+  
+  const handleDecreaseQuantity = (item) => {
+    const updatedCartItems = cartItems.map((cartItem) =>
+      cartItem.id === item.id
+        ? { ...cartItem, quantity: Math.max(cartItem.quantity - 1, 1) }
+        : cartItem
+    );
+  
+    setCartItems(updatedCartItems.filter((cartItem) => cartItem.quantity > 0));
   };
+  
+  
 
   const getCartTotal = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -61,10 +59,12 @@ export const CartProvider = ({ children }) => {
     <CartContext.Provider
       value={{
         product,
+        setProducts,
         cartItems,
         handleAddToCart,
         handleRemoveItem,
-        clearCart,
+        handleDecreaseQuantity,
+      
         getCartTotal,
       }}
     >
